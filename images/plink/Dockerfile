@@ -1,5 +1,5 @@
 # Stage 1: Build environment
-FROM ubuntu:22.04 as builder
+FROM ubuntu:22.04 AS builder
 
 # Set noninteractive installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -55,8 +55,9 @@ RUN apt-get update && apt-get install -y \
 COPY --from=builder /usr/local/bin/plink1.9 /usr/local/bin/plink1.9
 COPY --from=builder /usr/local/bin/plink2 /usr/local/bin/plink2
 
-# Create version file
-RUN echo "PLINK 1.9 and PLINK 2.0 (built from source)" > /etc/plink-version
+# Copy VERSION file and create version information
+COPY VERSION /etc/plink-version-tag
+RUN echo "PLINK 1.9 and PLINK 2.0 (built from source) - Version $(cat /etc/plink-version-tag)" > /etc/plink-version
 
 # Set working directory for data
 WORKDIR /data

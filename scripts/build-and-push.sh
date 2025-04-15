@@ -16,7 +16,13 @@ build_and_push_image() {
         exit 1
     fi
     
-    echo "Building and pushing ${image_name}..."
+    # Read version from VERSION file if it exists
+    local version="latest"
+    if [ -f "${image_path}/VERSION" ]; then
+        version=$(cat "${image_path}/VERSION" | tr -d '[:space:]')
+    fi
+    
+    echo "Building and pushing ${image_name}:${version}..."
     
     # Set up BuildX builder if it doesn't exist
     if ! docker buildx inspect multiarch-builder >/dev/null 2>&1; then
@@ -24,14 +30,15 @@ build_and_push_image() {
     fi
     docker buildx use multiarch-builder
     
-    # Build and push the multi-architecture image
+    # Build and push the multi-architecture image with both version and latest tags
     docker buildx build \
         --platform ${PLATFORMS} \
+        --tag ${REGISTRY}/${image_name}:${version} \
         --tag ${REGISTRY}/${image_name}:latest \
         --push \
         ${image_path}
         
-    echo "Successfully built and pushed ${image_name}"
+    echo "Successfully built and pushed ${image_name}:${version}"
 }
 
 # Main script

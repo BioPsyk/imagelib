@@ -65,16 +65,19 @@ To add a new image:
 To use these Docker images with Singularity (e.g., on an HPC cluster), you can pull them directly from Docker Hub:
 
 ```bash
-# Pull the latest PLINK image
+# Pull using specific version (recommended for reproducibility)
+singularity pull docker://biopsyk/plink:1.0.0
+
+# Or pull the latest version (always gets the newest updates)
 singularity pull docker://biopsyk/plink:latest
 
-# This will create a Singularity Image File (SIF) named 'plink_latest.sif'
+# This will create a Singularity Image File (SIF) named 'plink_1.0.0.sif' or 'plink_latest.sif'
 # You can then run PLINK commands using:
-singularity exec plink_latest.sif plink1.9 --help
-singularity exec plink_latest.sif plink2 --help
+singularity exec plink_1.0.0.sif plink1.9 --help
+singularity exec plink_1.0.0.sif plink2 --help
 
 # To bind your data directory (replace /path/to/data with your actual data path):
-singularity exec -B /path/to/data:/data plink_latest.sif plink2 --help
+singularity exec -B /path/to/data:/data plink_1.0.0.sif plink2 --help
 ```
 
 Note: When using Singularity, the container's `/data` directory is the recommended location for your working files. Use the `-B` flag to bind your host directory to this location.
