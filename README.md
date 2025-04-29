@@ -4,9 +4,10 @@ This repository contains Dockerfiles for commonly used software at our institute
 
 ## Available Images
 
-| Image Name | Description | Size | Latest Tag | Architectures |
-|------------|-------------|------|------------|---------------|
-| plink | PLINK1.9 and PLINK2 for genetic analysis | ~100MB | latest | amd64, arm64 |
+| Image Name | Description | Size | Latest Tag | Architectures | Software Version |
+|------------|-------------|------|------------|---------------|------------------|
+| plink | PLINK1.9 and PLINK2 for genetic analysis | ~100MB | latest | amd64, arm64 | - |
+| flashpca2 | Fast PCA implementation for genome-wide data | ~100MB | latest | amd64, arm64 | 2.1 |
 
 ## Repository Structure
 
