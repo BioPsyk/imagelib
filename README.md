@@ -6,8 +6,8 @@ This repository contains Dockerfiles for commonly used software at our institute
 
 | Image Name | Description | Size | Latest Tag | Architectures | Software Version | Image Version |
 |------------|-------------|------|------------|---------------|------------------|---------------|
-| plink | PLINK1.9 and PLINK2 for genetic analysis | ~100MB | latest | amd64, arm64 | 1.9 & 2.0 | - |
-| flashpca2 | Fast PCA implementation for genome-wide data | ~100MB | latest | amd64, arm64 | 2.1 | - |
+| plink | PLINK1.9 and PLINK2 for genetic analysis | ~100MB | latest | amd64, arm64 | 1.9 & 2.0 | 1.0.0 |
+| flashpca2 | Fast PCA implementation for genome-wide data | ~100MB | latest | amd64, arm64 | 2.1 | 1.0.0 |
 | gcta | Genome-wide Complex Trait Analysis | ~150MB | latest | amd64, arm64 | 1.94.1 | 1.0.0 |
 | gctb | Bayesian linear mixed models for complex traits | ~120MB | latest | amd64, arm64 | 2.05 | 1.0.0 |
 | readstat | Statistical data format conversion tool | ~120MB | latest | amd64, arm64 | 1.1.9 | 1.0.0 |
