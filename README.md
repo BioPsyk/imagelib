@@ -11,6 +11,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | gcta | Genome-wide Complex Trait Analysis | ~150MB | latest | amd64, arm64 | 1.94.1 | 1.0.0 |
 | gctb | Bayesian linear mixed models for complex traits | ~120MB | latest | amd64, arm64 | 2.05 | 1.0.0 |
 | readstat | Statistical data format conversion tool | ~120MB | latest | amd64, arm64 | 1.1.9 | 1.0.0 |
+| regenie | Whole genome regression for GWAS | ~150MB | latest | amd64 | 3.6 | 1.0.0 |
 
 ## Versioning Strategy
 
@@ -47,7 +48,11 @@ Example: `biopsyk/gcta:1.0.0` contains GCTA software version 1.94.1, but if we n
 │   │   ├── Dockerfile
 │   │   ├── README.md
 │   │   └── VERSION
-│   └── readstat/
+│   ├── readstat/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
+│   └── regenie/
 │       ├── Dockerfile
 │       ├── README.md
 │       └── VERSION
