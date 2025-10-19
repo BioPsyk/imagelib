@@ -125,6 +125,182 @@ docker run -v $(pwd):/data biopsyk/ldsc ldsc \
   --out mydata_celltype
 ```
 
+## Stratified LD Score Regression (S-LDSC)
+
+**Note**: S-LDSC functionality is built directly into LDSC and does not require a separate tool. The partitioned heritability and cell-type specific analyses shown above are implementations of S-LDSC.
+
+### What is S-LDSC?
+
+Stratified LD Score Regression (S-LDSC) extends basic LDSC to partition heritability across functional categories or annotations. This allows you to:
+- Identify which genomic annotations are enriched for heritability
+- Quantify the contribution of different functional categories to trait heritability
+- Test hypotheses about the biological mechanisms underlying GWAS signals
+
+### S-LDSC Workflow
+
+#### Step 1: Create Custom Annotations
+
+If you want to test your own genomic regions (e.g., enhancers, promoters, or tissue-specific regulatory elements):
+
+```bash
+# Create binary annotation file from BED file
+docker run -v $(pwd):/data biopsyk/ldsc make_annot \
+  --bed-file my_regions.bed \
+  --bimfile 1000G_EUR_Phase3_plink/1000G.EUR.QC.1.bim \
+  --annot-file my_annotation.1.annot.gz
+```
+
+Repeat for all 22 chromosomes (replace `.1.` with chromosome numbers).
+
+#### Step 2: Compute LD Scores for Custom Annotations
+
+```bash
+# Compute LD scores for your annotation
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --l2 \
+  --bfile 1000G_EUR_Phase3_plink/1000G.EUR.QC.1 \
+  --ld-wind-cm 1 \
+  --annot my_annotation.1.annot.gz \
+  --out my_annotation.1
+```
+
+Repeat for all chromosomes.
+
+#### Step 3: Run S-LDSC Analysis
+
+Basic S-LDSC with single annotation category:
+
+```bash
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --h2 trait.sumstats.gz \
+  --ref-ld-chr my_annotation. \
+  --w-ld-chr weights_hm3_no_hla/weights. \
+  --overlap-annot \
+  --frqfile-chr 1000G_Phase3_frq/1000G.EUR.QC. \
+  --out trait_sldsc_results
+```
+
+S-LDSC with baseline model (recommended):
+
+```bash
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --h2 trait.sumstats.gz \
+  --ref-ld-chr baseline_v1.2/baseline.,my_annotation. \
+  --w-ld-chr weights_hm3_no_hla/weights. \
+  --overlap-annot \
+  --frqfile-chr 1000G_Phase3_frq/1000G.EUR.QC. \
+  --out trait_sldsc_baseline_results
+```
+
+### S-LDSC with Baseline Annotations
+
+The baseline model includes 53 functional categories (coding, UTR, promoter, enhancer, etc.):
+
+```bash
+# Download baseline annotations
+wget https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase3_baseline_v1.2_ldscores.tgz
+tar -xvzf 1000G_Phase3_baseline_v1.2_ldscores.tgz
+
+# Run S-LDSC with baseline
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --h2 trait.sumstats.gz \
+  --ref-ld-chr baseline_v1.2/baseline. \
+  --w-ld-chr weights_hm3_no_hla/weights. \
+  --overlap-annot \
+  --frqfile-chr 1000G_Phase3_frq/1000G.EUR.QC. \
+  --out trait_baseline_sldsc \
+  --print-coefficients
+```
+
+### S-LDSC for Tissue/Cell-Type Specific Analysis
+
+Test enrichment in tissue-specific regulatory elements:
+
+```bash
+# Download tissue-specific annotations (e.g., GTEx)
+wget https://data.broadinstitute.org/alkesgroup/LDSCORE/LDSC_SEG_ldscores/Multi_tissue_gene_expr.ldcts
+
+# Run cell-type specific S-LDSC
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --h2-cts trait.sumstats.gz \
+  --ref-ld-chr baseline_v1.2/baseline. \
+  --ref-ld-chr-cts Multi_tissue_gene_expr.ldcts \
+  --w-ld-chr weights_hm3_no_hla/weights. \
+  --out trait_tissue_specific
+```
+
+### Interpreting S-LDSC Results
+
+The output `.results` file contains:
+
+- **Prop._SNPs**: Proportion of SNPs in the annotation
+- **Prop._h2**: Proportion of heritability explained by the annotation
+- **Prop._h2_std_error**: Standard error of proportion of heritability
+- **Enrichment**: Fold-enrichment of heritability (Prop._h2 / Prop._SNPs)
+- **Enrichment_std_error**: Standard error of enrichment
+- **Enrichment_p**: P-value for enrichment test
+- **Coefficient**: Regression coefficient (tau)
+- **Coefficient_std_error**: Standard error of coefficient
+
+**Key metrics**:
+- **Enrichment > 1**: Annotation is enriched for heritability
+- **Enrichment_p < 0.05**: Statistically significant enrichment
+- **Prop._h2**: Shows biological importance (how much heritability is explained)
+
+### S-LDSC Best Practices
+
+1. **Always use baseline model**: Include `baseline_v1.2/baseline.` to control for known annotations
+2. **Use --overlap-annot**: Accounts for overlap between annotations
+3. **Use --print-coefficients**: Get regression coefficients (tau values)
+4. **Multiple testing correction**: Apply Bonferroni or FDR correction for multiple annotations
+5. **Check sample size**: Ensure GWAS has sufficient power (N > 5,000)
+6. **Validate results**: Check if enrichment is robust to different LD reference panels
+
+### Common S-LDSC Use Cases
+
+**1. Test specific genomic regions**:
+```bash
+# E.g., test if brain enhancers are enriched for schizophrenia heritability
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --h2 scz.sumstats.gz \
+  --ref-ld-chr baseline_v1.2/baseline.,brain_enhancers. \
+  --w-ld-chr weights_hm3_no_hla/weights. \
+  --overlap-annot \
+  --frqfile-chr 1000G_Phase3_frq/1000G.EUR.QC. \
+  --out scz_brain_enhancers
+```
+
+**2. Compare across tissues**:
+```bash
+# Use .ldcts file to test multiple tissues simultaneously
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --h2-cts trait.sumstats.gz \
+  --ref-ld-chr baseline_v1.2/baseline. \
+  --ref-ld-chr-cts GTEx_tissues.ldcts \
+  --w-ld-chr weights_hm3_no_hla/weights. \
+  --out trait_gtex_tissues
+```
+
+**3. Custom functional categories**:
+```bash
+# Test your own ChIP-seq peaks, ATAC-seq peaks, etc.
+docker run -v $(pwd):/data biopsyk/ldsc ldsc \
+  --h2 trait.sumstats.gz \
+  --ref-ld-chr baseline_v1.2/baseline.,my_chipseq. \
+  --w-ld-chr weights_hm3_no_hla/weights. \
+  --overlap-annot \
+  --frqfile-chr 1000G_Phase3_frq/1000G.EUR.QC. \
+  --out trait_chipseq_enrichment
+```
+
+### S-LDSC Resources
+
+- [Baseline model annotations](https://data.broadinstitute.org/alkesgroup/LDSCORE/)
+- [Cell-type specific annotations](https://alkesgroup.broadinstitute.org/LDSCORE/LDSC_SEG_ldscores/)
+- [1000 Genomes reference panel](https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase3_plinkfiles.tgz)
+- [Weights for regression](https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase3_weights_hm3_no_MHC.tgz)
+- [Frequency files](https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase3_frq.tgz)
+
 ## Input File Formats
 
 ### GWAS Summary Statistics
