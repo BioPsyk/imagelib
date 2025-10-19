@@ -12,6 +12,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | gctb | Bayesian linear mixed models for complex traits | ~120MB | latest | amd64, arm64 | 2.05 | 1.0.0 |
 | readstat | Statistical data format conversion tool | ~120MB | latest | amd64, arm64 | 1.1.9 | 1.0.0 |
 | regenie | Whole genome regression for GWAS | ~150MB | latest | amd64 | 3.6 | 1.0.0 |
+| bcftools | VCF/BCF manipulation with HTSlib tools | ~250MB | latest | amd64, arm64 | 1.22 / 1.22.1 | 1.0.0 |
 
 ## Versioning Strategy
 
@@ -52,7 +53,11 @@ Example: `biopsyk/gcta:1.0.0` contains GCTA software version 1.94.1, but if we n
 │   │   ├── Dockerfile
 │   │   ├── README.md
 │   │   └── VERSION
-│   └── regenie/
+│   ├── regenie/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
+│   └── bcftools/
 │       ├── Dockerfile
 │       ├── README.md
 │       └── VERSION
@@ -73,10 +78,11 @@ To build and push an image:
 # Build and push all images
 ./scripts/build-and-push.sh all
 
-# Examples for the new images
+# Examples for specific images
 ./scripts/build-and-push.sh gcta
 ./scripts/build-and-push.sh gctb
 ./scripts/build-and-push.sh readstat
+./scripts/build-and-push.sh bcftools
 ```
 
 ### Prerequisites
@@ -97,11 +103,14 @@ docker build -t biopsyk/plink:latest .
 cd images/gcta
 docker build -t biopsyk/gcta:latest .
 
-cd images/gctb  
+cd images/gctb
 docker build -t biopsyk/gctb:latest .
 
 cd images/readstat
 docker build -t biopsyk/readstat:latest .
+
+cd images/bcftools
+docker build -t biopsyk/bcftools:latest .
 ```
 
 ## Contributing
@@ -139,6 +148,10 @@ singularity exec gctb_2.05.sif gctb --help
 
 singularity pull docker://biopsyk/readstat:1.0.0
 singularity exec readstat_1.0.0.sif readstat --help
+
+singularity pull docker://biopsyk/bcftools:1.0.0
+singularity exec bcftools_1.0.0.sif bcftools --help
+singularity exec bcftools_1.0.0.sif tabix --help
 
 # To bind your data directory (replace /path/to/data with your actual data path):
 singularity exec -B /path/to/data:/data plink_1.0.0.sif plink2 --help
