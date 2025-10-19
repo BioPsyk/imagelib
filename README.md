@@ -13,6 +13,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | readstat | Statistical data format conversion tool | ~120MB | latest | amd64, arm64 | 1.1.9 | 1.0.0 |
 | regenie | Whole genome regression for GWAS | ~150MB | latest | amd64 | 3.6 | 1.0.0 |
 | bcftools | VCF/BCF manipulation with HTSlib tools | ~250MB | latest | amd64, arm64 | 1.22 / 1.22.1 | 1.0.0 |
+| ldsc | LD Score Regression for heritability & correlation | ~1.4GB | latest | amd64, arm64 | 2.0.0 | 1.0.0 |
 
 ## Versioning Strategy
 
@@ -57,7 +58,11 @@ Example: `biopsyk/gcta:1.0.0` contains GCTA software version 1.94.1, but if we n
 │   │   ├── Dockerfile
 │   │   ├── README.md
 │   │   └── VERSION
-│   └── bcftools/
+│   ├── bcftools/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
+│   └── ldsc/
 │       ├── Dockerfile
 │       ├── README.md
 │       └── VERSION
@@ -83,6 +88,7 @@ To build and push an image:
 ./scripts/build-and-push.sh gctb
 ./scripts/build-and-push.sh readstat
 ./scripts/build-and-push.sh bcftools
+./scripts/build-and-push.sh ldsc
 ```
 
 ### Prerequisites
@@ -111,6 +117,9 @@ docker build -t biopsyk/readstat:latest .
 
 cd images/bcftools
 docker build -t biopsyk/bcftools:latest .
+
+cd images/ldsc
+docker build -t biopsyk/ldsc:latest .
 ```
 
 ## Contributing
@@ -152,6 +161,10 @@ singularity exec readstat_1.0.0.sif readstat --help
 singularity pull docker://biopsyk/bcftools:1.0.0
 singularity exec bcftools_1.0.0.sif bcftools --help
 singularity exec bcftools_1.0.0.sif tabix --help
+
+singularity pull docker://biopsyk/ldsc:1.0.0
+singularity exec ldsc_1.0.0.sif ldsc -h
+singularity exec ldsc_1.0.0.sif munge_sumstats -h
 
 # To bind your data directory (replace /path/to/data with your actual data path):
 singularity exec -B /path/to/data:/data plink_1.0.0.sif plink2 --help
