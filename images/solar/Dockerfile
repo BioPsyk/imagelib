@@ -13,20 +13,18 @@ RUN apt-get update && apt-get install -y \
     libgfortran5 \
     && rm -rf /var/lib/apt/lists/*
 
-# Download and install SOLAR-Eclipse 9.0.1 static version
+# Download and install SOLAR-Eclipse 9.0.0 static version
 WORKDIR /tmp
-RUN wget -q https://www.nitrc.org/frs/download.php/12509/solar-eclipse-9.0.1-static-Linux.zip && \
-    unzip -q solar-eclipse-9.0.1-static-Linux.zip && \
-    mkdir -p /opt/solar-eclipse && \
-    mv solar-eclipse-9.0.1-static-Linux/* /opt/solar-eclipse/ && \
+RUN wget -q https://www.nitrc.org/frs/download.php/12468/solar-eclipse-9.0.0-static-linux.zip && \
+    unzip -q solar-eclipse-9.0.0-static-linux.zip && \
+    cd solar900 && \
+    ./install_solar /opt/solar-eclipse /usr/local/bin && \
+    cd /tmp && \
     rm -rf /tmp/*
-
-# Add SOLAR to PATH
-ENV PATH="/opt/solar-eclipse/bin:${PATH}"
 
 # Copy VERSION file and create version information
 COPY VERSION /etc/solar-version-tag
-RUN echo "SOLAR Eclipse 9.0.1 (Static Linux)" > /etc/solar-version
+RUN echo "SOLAR Eclipse 9.0.0 (Static Linux)" > /etc/solar-version
 
 # Set working directory for data
 WORKDIR /data

@@ -15,8 +15,8 @@ This repository contains Dockerfiles for commonly used software at our institute
 | bcftools | VCF/BCF manipulation with HTSlib tools | ~250MB | latest | amd64, arm64 | 1.22 / 1.22.1 | 1.0.0 |
 | ldsc | LD Score Regression for heritability & correlation | ~1.4GB | latest | amd64, arm64 | 2.0.0 | 1.0.0 |
 | metal | GWAS meta-analysis tool | ~110MB | latest | amd64, arm64 | 2020-05-05 | 1.0.0 |
-| beagle | Genotype phasing and imputation | ~200MB | latest | amd64, arm64 | 5.5 (27Feb25) | 1.0.0 |
-| solar | Genetic variance components and pedigree analysis | ~150MB | latest | amd64, arm64 | 9.0.1 | 1.0.0 |
+| beagle | Genotype phasing and imputation | ~200MB | latest | amd64 | 5.5 (27Feb25) | 1.0.0 |
+| solar | Genetic variance components and pedigree analysis | ~150MB | latest | amd64 | 9.0.0 | 1.0.0 |
 
 ## Versioning Strategy
 

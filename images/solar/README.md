@@ -9,7 +9,7 @@ SOLAR-Eclipse (Sequential Oligogenic Linkage Analysis Routines) is an extensive,
 ## Version Information
 
 - Internal image version: 1.0.0
-- SOLAR-Eclipse version: 9.0.1 (Static Linux)
+- SOLAR-Eclipse version: 9.0.0 (Static Linux)
 - Built from: https://www.nitrc.org/projects/se_linux/
 
 ## Key Features
