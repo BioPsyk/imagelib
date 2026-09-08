@@ -13,6 +13,9 @@ This repository contains Dockerfiles for commonly used software at our institute
 | readstat | Statistical data format conversion tool | ~120MB | latest | amd64, arm64 | 1.1.9 | 1.0.0 |
 | regenie | Whole genome regression for GWAS | ~150MB | latest | amd64 | 3.6 | 1.0.0 |
 | bcftools | VCF/BCF manipulation with HTSlib tools | ~250MB | latest | amd64, arm64 | 1.22 / 1.22.1 | 1.0.0 |
+| perl | Perl 5 interpreter | ~120MB | latest | amd64, arm64 | 5.34 | 1.0.0 |
+| vcftools | VCF analysis (C++ binary and Perl helpers) | ~160MB | latest | amd64, arm64 | 0.1.17 | 1.0.0 |
+| custom | Combined BCFtools, Perl, and VCFtools | ~300MB | latest | amd64, arm64 | 1.22 / 5.34 / 0.1.17 | 1.0.0 |
 | ldsc | LD Score Regression for heritability & correlation | ~1.4GB | latest | amd64, arm64 | 2.0.0 | 1.0.0 |
 | metal | GWAS meta-analysis tool | ~110MB | latest | amd64, arm64 | 2020-05-05 | 1.0.0 |
 | beagle | Genotype phasing and imputation | ~200MB | latest | amd64 | 5.5 (27Feb25) | 1.0.0 |
@@ -65,6 +68,18 @@ Example: `biopsyk/gcta:1.0.0` contains GCTA software version 1.94.1, but if we n
 │   │   ├── Dockerfile
 │   │   ├── README.md
 │   │   └── VERSION
+│   ├── perl/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
+│   ├── vcftools/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
+│   ├── custom/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
 │   ├── ldsc/
 │   │   ├── Dockerfile
 │   │   ├── README.md
@@ -103,6 +118,9 @@ To build and push an image:
 ./scripts/build-and-push.sh gctb
 ./scripts/build-and-push.sh readstat
 ./scripts/build-and-push.sh bcftools
+./scripts/build-and-push.sh perl
+./scripts/build-and-push.sh vcftools
+./scripts/build-and-push.sh custom
 ./scripts/build-and-push.sh ldsc
 ./scripts/build-and-push.sh metal
 ./scripts/build-and-push.sh beagle
@@ -135,6 +153,15 @@ docker build -t biopsyk/readstat:latest .
 
 cd images/bcftools
 docker build -t biopsyk/bcftools:latest .
+
+cd images/perl
+docker build -t biopsyk/perl:latest .
+
+cd images/vcftools
+docker build -t biopsyk/vcftools:latest .
+
+cd images/custom
+docker build -t biopsyk/custom:latest .
 
 cd images/ldsc
 docker build -t biopsyk/ldsc:latest .
@@ -188,6 +215,18 @@ singularity exec readstat_1.0.0.sif readstat --help
 singularity pull docker://biopsyk/bcftools:1.0.0
 singularity exec bcftools_1.0.0.sif bcftools --help
 singularity exec bcftools_1.0.0.sif tabix --help
+
+singularity pull docker://biopsyk/perl:1.0.0
+singularity exec perl_1.0.0.sif perl -v
+
+singularity pull docker://biopsyk/vcftools:1.0.0
+singularity exec vcftools_1.0.0.sif vcftools --help
+singularity exec vcftools_1.0.0.sif vcf-sort input.vcf > sorted.vcf
+
+singularity pull docker://biopsyk/custom:1.0.0
+singularity exec custom_1.0.0.sif bcftools --help
+singularity exec custom_1.0.0.sif vcftools --help
+singularity exec custom_1.0.0.sif perl -v
 
 singularity pull docker://biopsyk/ldsc:1.0.0
 singularity exec ldsc_1.0.0.sif ldsc -h
