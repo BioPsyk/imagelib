@@ -89,17 +89,17 @@ COPY --from=vcftools-builder /opt/vcftools/share/perl5 /usr/local/share/perl5
 
 RUN ldconfig
 
-COPY VERSION /etc/custom-version-tag
+COPY VERSION /etc/combined_bcftools_vcftools_perl-version-tag
 RUN { \
-      echo "custom image $(cat /etc/custom-version-tag)"; \
+      echo "combined_bcftools_vcftools_perl image $(cat /etc/combined_bcftools_vcftools_perl-version-tag)"; \
       echo "BCFtools $(bcftools --version | head -n1 | cut -d' ' -f2) with HTSlib"; \
       echo "Perl $(perl -e 'print $^V')"; \
       vcftools --version; \
-    } > /etc/custom-version
+    } > /etc/combined_bcftools_vcftools_perl-version
 
 WORKDIR /data
 
-RUN groupadd -r custom && useradd -r -g custom custom
-USER custom
+RUN groupadd -r combined_bcftools_vcftools_perl && useradd -r -g combined_bcftools_vcftools_perl combined_bcftools_vcftools_perl
+USER combined_bcftools_vcftools_perl
 
 CMD ["bcftools", "--help"]

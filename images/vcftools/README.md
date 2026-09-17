@@ -86,7 +86,7 @@ docker run -v $(pwd):/data biopsyk/vcftools vcftools --gzvcf input.vcf.gz --hap-
 - The container runs as a non-root user for security
 - The working directory is set to `/data`
 - Input files should be mounted to `/data` in the container
-- For combined BCFtools + Perl + VCFtools workflows, use the `custom` image
+- For combined BCFtools + Perl + VCFtools workflows, use the `combined_bcftools_vcftools_perl` image
 - BCFtools is a separate standalone image (`biopsyk/bcftools`)
 
 ## Building the Image

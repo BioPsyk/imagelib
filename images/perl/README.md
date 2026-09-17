@@ -43,7 +43,7 @@ singularity exec perl_1.0.0.sif perl myscript.pl
 - The container runs as a non-root user for security
 - The working directory is set to `/data`
 - Input files should be mounted to `/data` in the container
-- This image contains the Perl interpreter only. VCFtools Perl helpers (`vcf-sort`, `Vcf.pm`, etc.) live in the `vcftools` and `custom` images.
+- This image contains the Perl interpreter only. VCFtools Perl helpers (`vcf-sort`, `Vcf.pm`, etc.) live in the `vcftools` and `combined_bcftools_vcftools_perl` images.
 
 ## Building the Image
 

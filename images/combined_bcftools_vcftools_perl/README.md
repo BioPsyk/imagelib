@@ -1,4 +1,4 @@
-# Custom Docker Image (BCFtools + Perl + VCFtools)
+# combined_bcftools_vcftools_perl Docker Image (BCFtools + Perl + VCFtools)
 
 This image combines the three tools that are also published as standalone imagelib images:
 
@@ -10,7 +10,7 @@ Use it when a single container must run BCFtools, Perl scripts, and VCFtools in 
 
 ## Description
 
-The custom image is a convenience composition, not a different software stack. Software versions match the standalone images:
+The combined_bcftools_vcftools_perl image is a convenience composition, not a different software stack. Software versions match the standalone images:
 
 - **BCFtools 1.22** with HTSlib 1.22.1 (`tabix`, `bgzip`, `htsfile`)
 - **Perl 5.34** (Ubuntu 22.04)
@@ -26,7 +26,7 @@ The custom image is a convenience composition, not a different software stack. S
 - Perl version: 5.34
 - VCFtools version: 0.1.17
 
-Installed versions are also recorded in `/etc/custom-version`.
+Installed versions are also recorded in `/etc/combined_bcftools_vcftools_perl-version`.
 
 ## Usage
 
@@ -34,22 +34,22 @@ Installed versions are also recorded in `/etc/custom-version`.
 
 ```bash
 # BCFtools
-docker run -v $(pwd):/data biopsyk/custom bcftools view input.vcf.gz
+docker run -v $(pwd):/data biopsyk/combined_bcftools_vcftools_perl bcftools view input.vcf.gz
 
 # VCFtools
-docker run -v $(pwd):/data biopsyk/custom vcftools --gzvcf input.vcf.gz --freq --out freqs
+docker run -v $(pwd):/data biopsyk/combined_bcftools_vcftools_perl vcftools --gzvcf input.vcf.gz --freq --out freqs
 
 # Perl
-docker run -v $(pwd):/data biopsyk/custom perl myscript.pl
+docker run -v $(pwd):/data biopsyk/combined_bcftools_vcftools_perl perl myscript.pl
 
 # VCFtools Perl helper
-docker run -v $(pwd):/data biopsyk/custom vcf-sort input.vcf > sorted.vcf
+docker run -v $(pwd):/data biopsyk/combined_bcftools_vcftools_perl vcf-sort input.vcf > sorted.vcf
 ```
 
 ### Combined workflow
 
 ```bash
-docker run -v $(pwd):/data biopsyk/custom bash -c '\
+docker run -v $(pwd):/data biopsyk/combined_bcftools_vcftools_perl bash -c '\
   bcftools view -i "QUAL>30" input.vcf.gz -Ov -o filtered.vcf && \
   vcf-sort filtered.vcf > sorted.vcf && \
   vcftools --vcf sorted.vcf --freq --out freqs'
@@ -59,11 +59,11 @@ docker run -v $(pwd):/data biopsyk/custom bash -c '\
 
 ```bash
 # Pull the image
-singularity pull docker://biopsyk/custom:1.0.0
+singularity pull docker://biopsyk/combined_bcftools_vcftools_perl:1.0.0
 
-singularity exec custom_1.0.0.sif bcftools --help
-singularity exec custom_1.0.0.sif vcftools --help
-singularity exec custom_1.0.0.sif perl -v
+singularity exec combined_bcftools_vcftools_perl_1.0.0.sif bcftools --help
+singularity exec combined_bcftools_vcftools_perl_1.0.0.sif vcftools --help
+singularity exec combined_bcftools_vcftools_perl_1.0.0.sif perl -v
 ```
 
 ## When to use standalone instead
@@ -73,7 +73,7 @@ singularity exec custom_1.0.0.sif perl -v
 | Only BCFtools / tabix / bgzip | `biopsyk/bcftools` |
 | Only a Perl interpreter | `biopsyk/perl` |
 | Only VCFtools | `biopsyk/vcftools` |
-| All three in one container | `biopsyk/custom` |
+| All three in one container | `biopsyk/combined_bcftools_vcftools_perl` |
 
 ## Notes
 
@@ -87,7 +87,7 @@ singularity exec custom_1.0.0.sif perl -v
 From this directory:
 
 ```bash
-docker build -t biopsyk/custom:latest .
+docker build -t biopsyk/combined_bcftools_vcftools_perl:latest .
 ```
 
 ## References
