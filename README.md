@@ -17,6 +17,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | vcftools | VCF analysis (C++ binary and Perl helpers) | ~160MB | latest | amd64, arm64 | 0.1.17 | 1.0.0 |
 | combined_bcftools_vcftools_perl | Combined BCFtools, Perl, and VCFtools | ~300MB | latest | amd64, arm64 | 1.22 / 5.34 / 0.1.17 | 1.0.0 |
 | ldsc | LD Score Regression for heritability & correlation | ~1.4GB | latest | amd64, arm64 | 2.0.0 | 1.0.0 |
+| getpheno | Phenotype extraction from biobank-scale files | ~1.8GB | latest | amd64, arm64 | 1.30 | 1.0.0 |
 | metal | GWAS meta-analysis tool | ~110MB | latest | amd64, arm64 | 2020-05-05 | 1.0.0 |
 | beagle | Genotype phasing and imputation | ~200MB | latest | amd64 | 5.5 (27Feb25) | 1.0.0 |
 | solar | Genetic variance components and pedigree analysis | ~150MB | latest | amd64 | 9.0.0 | 1.0.0 |
@@ -84,6 +85,10 @@ Example: `biopsyk/gcta:1.0.0` contains GCTA software version 1.94.1, but if we n
 │   │   ├── Dockerfile
 │   │   ├── README.md
 │   │   └── VERSION
+│   ├── getpheno/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
 │   ├── metal/
 │   │   ├── Dockerfile
 │   │   ├── README.md
@@ -122,6 +127,7 @@ To build and push an image:
 ./scripts/build-and-push.sh vcftools
 ./scripts/build-and-push.sh combined_bcftools_vcftools_perl
 ./scripts/build-and-push.sh ldsc
+./scripts/build-and-push.sh getpheno
 ./scripts/build-and-push.sh metal
 ./scripts/build-and-push.sh beagle
 ./scripts/build-and-push.sh solar
@@ -165,6 +171,9 @@ docker build -t biopsyk/combined_bcftools_vcftools_perl:latest .
 
 cd images/ldsc
 docker build -t biopsyk/ldsc:latest .
+
+cd images/getpheno
+docker build -t biopsyk/getpheno:latest .
 
 cd images/metal
 docker build -t biopsyk/metal:latest .
@@ -231,6 +240,9 @@ singularity exec combined_bcftools_vcftools_perl_1.0.0.sif perl -v
 singularity pull docker://biopsyk/ldsc:1.0.0
 singularity exec ldsc_1.0.0.sif ldsc -h
 singularity exec ldsc_1.0.0.sif munge_sumstats -h
+
+singularity pull docker://biopsyk/getpheno:1.0.0
+singularity exec getpheno_1.0.0.sif getpheno --help
 
 singularity pull docker://biopsyk/metal:1.0.0
 singularity exec metal_1.0.0.sif metal --help
