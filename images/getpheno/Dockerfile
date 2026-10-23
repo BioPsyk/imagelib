@@ -1,13 +1,15 @@
 # GetPheno: extract phenotypes from biobank-scale files
-# Upstream: https://github.com/MischaLundberg/GetPheno (V1.30)
+# Upstream: https://github.com/MischaLundberg/GetPheno (main)
 
 FROM rocker/r-ver:4.3.3
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG GETPHENO_REF=V1.30
-ARG GETPHENO_SHA=f49d73ae1c3a5868d7d2470d27ad61315993951a
+ARG GETPHENO_REF=main
+ARG GETPHENO_SHA=1a4e1bcff31561baec8ac451a8c507b6c3069b63
 
-LABEL org.opencontainers.image.source="https://github.com/MischaLundberg/GetPheno" \
+LABEL org.opencontainers.image.title="GetPheno" \
+      org.opencontainers.image.description="Extract phenotypes from biobank-scale files" \
+      org.opencontainers.image.source="https://github.com/MischaLundberg/GetPheno" \
       org.opencontainers.image.revision="${GETPHENO_SHA}"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -36,9 +38,9 @@ RUN git clone --depth 1 --branch "${GETPHENO_REF}" https://github.com/MischaLund
     && chmod 0755 /opt/getpheno/get_pheno.py /opt/getpheno/docker/entrypoint.sh \
     && python3 -m py_compile /opt/getpheno/get_pheno.py \
     && printf '%s\n' "${GETPHENO_SHA}" > /opt/getpheno/IMAGE_REVISION \
-    && printf '#!/bin/bash\nexec python3 /opt/getpheno/get_pheno.py "$@"\n' > /usr/local/bin/get_pheno.py \
-    && printf '#!/bin/bash\nexec python3 /opt/getpheno/get_pheno.py "$@"\n' > /usr/local/bin/getpheno \
-    && printf '#!/bin/bash\nexec /opt/getpheno/docker/entrypoint.sh "$@"\n' > /usr/local/bin/getpheno-shiny \
+    && printf '#!/bin/sh\nexec python3 /opt/getpheno/get_pheno.py "$@"\n' > /usr/local/bin/get_pheno.py \
+    && printf '#!/bin/sh\nexec python3 /opt/getpheno/get_pheno.py "$@"\n' > /usr/local/bin/getpheno \
+    && printf '#!/bin/sh\nexec /opt/getpheno/docker/entrypoint.sh shiny "$@"\n' > /usr/local/bin/getpheno-shiny \
     && chmod 0755 /usr/local/bin/get_pheno.py /usr/local/bin/getpheno /usr/local/bin/getpheno-shiny
 
 ENV GETPHENO_SHINY_CONFIG=/config/projects.conf \
@@ -58,11 +60,14 @@ RUN { \
 
 WORKDIR /data
 
-RUN groupadd -r getpheno && useradd -r -g getpheno getpheno \
-    && mkdir -p /tmp/getpheno-home \
-    && chown -R getpheno:getpheno /tmp/getpheno-home /opt/getpheno /data
+RUN groupadd --system getpheno \
+    && useradd --system --gid getpheno --home-dir /tmp/getpheno-home getpheno \
+    && mkdir -p /tmp/getpheno-home /data \
+    && chown -R getpheno:getpheno /tmp/getpheno-home /data /opt/getpheno
 USER getpheno
 
 EXPOSE 3838
 
+# CLI-first: upstream defaults to Shiny. Their entrypoint still accepts getpheno/--help.
+ENTRYPOINT ["/opt/getpheno/docker/entrypoint.sh"]
 CMD ["getpheno", "--help"]
