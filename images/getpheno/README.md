@@ -10,8 +10,8 @@ The image also includes the optional R Shiny interface and a Slurm client, match
 
 ## Version Information
 
-- Internal image version: 1.0.0
-- GetPheno version: 1.30 (`V1.30`, commit `f49d73ae1c3a5868d7d2470d27ad61315993951a`)
+- Internal image version: 1.1.0
+- GetPheno version: `main` at `1a4e1bcff31561baec8ac451a8c507b6c3069b63` (currently also tagged `V1.30`)
 - Python 3 and R 4.3.3 (rocker/r-ver)
 
 Installed versions are also recorded in `/etc/getpheno-version`.
@@ -58,8 +58,8 @@ The official compose-based cluster deployment remains `ghcr.io/mischalundberg/ge
 ### Using with Singularity
 
 ```bash
-singularity pull docker://biopsyk/getpheno:1.0.0
-singularity exec getpheno_1.0.0.sif getpheno --help
+singularity pull docker://biopsyk/getpheno:1.1.0
+singularity exec getpheno_1.1.0.sif getpheno --help
 ```
 
 ## Notes
@@ -81,6 +81,6 @@ docker build -t biopsyk/getpheno:latest .
 ## References
 
 - [GetPheno GitHub repository](https://github.com/MischaLundberg/GetPheno)
-- [GetPheno V1.30](https://github.com/MischaLundberg/GetPheno/releases/tag/V1.30)
+- [GetPheno main](https://github.com/MischaLundberg/GetPheno/tree/main)
 - [DOI 10.5281/zenodo.21902133](https://doi.org/10.5281/zenodo.21902133)
 - Upstream image: `ghcr.io/mischalundberg/getpheno`
