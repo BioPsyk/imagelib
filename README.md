@@ -17,7 +17,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | vcftools | VCF analysis (C++ binary and Perl helpers) | ~160MB | latest | amd64, arm64 | 0.1.17 | 1.0.0 |
 | combined_bcftools_vcftools_perl | Combined BCFtools, Perl, and VCFtools | ~300MB | latest | amd64, arm64 | 1.22 / 5.34 / 0.1.17 | 1.0.0 |
 | ldsc | LD Score Regression for heritability & correlation | ~1.4GB | latest | amd64, arm64 | 2.0.0 | 1.0.0 |
-| getpheno | Phenotype extraction from biobank-scale files | ~1.8GB | latest | amd64, arm64 | main @ 1a4e1bc | 1.1.0 |
+| getpheno | Phenotype extraction from biobank-scale files | ~1.8GB | latest | amd64, arm64 | main (latest) | 1.2.0 |
 | metal | GWAS meta-analysis tool | ~110MB | latest | amd64, arm64 | 2020-05-05 | 1.0.0 |
 | beagle | Genotype phasing and imputation | ~200MB | latest | amd64 | 5.5 (27Feb25) | 1.0.0 |
 | solar | Genetic variance components and pedigree analysis | ~150MB | latest | amd64 | 9.0.0 | 1.0.0 |
@@ -241,8 +241,8 @@ singularity pull docker://biopsyk/ldsc:1.0.0
 singularity exec ldsc_1.0.0.sif ldsc -h
 singularity exec ldsc_1.0.0.sif munge_sumstats -h
 
-singularity pull docker://biopsyk/getpheno:1.1.0
-singularity exec getpheno_1.1.0.sif getpheno --help
+singularity pull docker://biopsyk/getpheno:1.2.0
+singularity exec getpheno_1.2.0.sif getpheno --help
 
 singularity pull docker://biopsyk/metal:1.0.0
 singularity exec metal_1.0.0.sif metal --help

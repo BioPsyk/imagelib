@@ -5,12 +5,10 @@ FROM rocker/r-ver:4.3.3
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG GETPHENO_REF=main
-ARG GETPHENO_SHA=1a4e1bcff31561baec8ac451a8c507b6c3069b63
 
 LABEL org.opencontainers.image.title="GetPheno" \
       org.opencontainers.image.description="Extract phenotypes from biobank-scale files" \
-      org.opencontainers.image.source="https://github.com/MischaLundberg/GetPheno" \
-      org.opencontainers.image.revision="${GETPHENO_SHA}"
+      org.opencontainers.image.source="https://github.com/MischaLundberg/GetPheno"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -30,14 +28,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /tmp
 RUN git clone --depth 1 --branch "${GETPHENO_REF}" https://github.com/MischaLundberg/GetPheno.git getpheno \
     && cd getpheno \
-    && test "$(git rev-parse HEAD)" = "${GETPHENO_SHA}" \
     && python3 -m pip install --no-cache-dir -r docker/requirements.txt \
     && Rscript -e 'install.packages("shiny", repos = getOption("repos"))' \
     && mkdir -p /opt \
+    && git rev-parse HEAD > /tmp/getpheno-revision \
     && mv /tmp/getpheno /opt/getpheno \
+    && mv /tmp/getpheno-revision /opt/getpheno/IMAGE_REVISION \
     && chmod 0755 /opt/getpheno/get_pheno.py /opt/getpheno/docker/entrypoint.sh \
     && python3 -m py_compile /opt/getpheno/get_pheno.py \
-    && printf '%s\n' "${GETPHENO_SHA}" > /opt/getpheno/IMAGE_REVISION \
     && printf '#!/bin/sh\nexec python3 /opt/getpheno/get_pheno.py "$@"\n' > /usr/local/bin/get_pheno.py \
     && printf '#!/bin/sh\nexec python3 /opt/getpheno/get_pheno.py "$@"\n' > /usr/local/bin/getpheno \
     && printf '#!/bin/sh\nexec /opt/getpheno/docker/entrypoint.sh shiny "$@"\n' > /usr/local/bin/getpheno-shiny \
@@ -52,7 +50,7 @@ ENV GETPHENO_SHINY_CONFIG=/config/projects.conf \
 
 COPY VERSION /etc/getpheno-version-tag
 RUN { \
-      echo "GetPheno ${GETPHENO_REF} (${GETPHENO_SHA})"; \
+      echo "GetPheno ${GETPHENO_REF} ($(tr -d '[:space:]' < /opt/getpheno/IMAGE_REVISION))"; \
       echo "Image $(cat /etc/getpheno-version-tag)"; \
       python3 --version; \
       Rscript -e 'cat(R.version.string, "\n")'; \
