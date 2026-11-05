@@ -21,6 +21,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | metal | GWAS meta-analysis tool | ~110MB | latest | amd64, arm64 | 2020-05-05 | 1.0.0 |
 | beagle | Genotype phasing and imputation | ~200MB | latest | amd64 | 5.5 (27Feb25) | 1.0.0 |
 | solar | Genetic variance components and pedigree analysis | ~150MB | latest | amd64 | 9.0.0 | 1.0.0 |
+| pedsum | Pedigree summary: structure, relatedness, inbreeding, Ne | ~1.2GB | latest | amd64, arm64 | main (latest) | 1.0.0 |
 
 ## Versioning Strategy
 
@@ -97,7 +98,11 @@ Example: `biopsyk/gcta:1.0.0` contains GCTA software version 1.94.1, but if we n
 │   │   ├── Dockerfile
 │   │   ├── README.md
 │   │   └── VERSION
-│   └── solar/
+│   ├── solar/
+│   │   ├── Dockerfile
+│   │   ├── README.md
+│   │   └── VERSION
+│   └── pedsum/
 │       ├── Dockerfile
 │       ├── README.md
 │       └── VERSION
@@ -131,6 +136,7 @@ To build and push an image:
 ./scripts/build-and-push.sh metal
 ./scripts/build-and-push.sh beagle
 ./scripts/build-and-push.sh solar
+./scripts/build-and-push.sh pedsum
 ```
 
 ### Prerequisites
@@ -183,6 +189,9 @@ docker build -t biopsyk/beagle:latest .
 
 cd images/solar
 docker build -t biopsyk/solar:latest .
+
+cd images/pedsum
+docker build -t biopsyk/pedsum:latest .
 ```
 
 ## Contributing
@@ -254,6 +263,10 @@ singularity exec beagle_1.0.0.sif beagle gt=input.vcf.gz out=output
 singularity pull docker://biopsyk/solar:1.0.0
 singularity exec solar_1.0.0.sif solar
 singularity exec solar_1.0.0.sif solar < analysis_script.tcl
+
+singularity pull docker://biopsyk/pedsum:1.0.0
+singularity exec pedsum_1.0.0.sif pedsum --help
+singularity exec pedsum_1.0.0.sif pedsum summarize --in pedigree.tsv --out summary_out
 
 # To bind your data directory (replace /path/to/data with your actual data path):
 singularity exec -B /path/to/data:/data plink_1.0.0.sif plink2 --help
