@@ -21,7 +21,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | metal | GWAS meta-analysis tool | ~110MB | latest | amd64, arm64 | 2020-05-05 | 1.0.0 |
 | beagle | Genotype phasing and imputation | ~200MB | latest | amd64 | 5.5 (27Feb25) | 1.0.0 |
 | solar | Genetic variance components and pedigree analysis | ~150MB | latest | amd64 | 9.0.0 | 1.0.0 |
-| pedsum | Pedigree summary: structure, relatedness, inbreeding, Ne | ~1.2GB | latest | amd64, arm64 | main (latest) | 1.0.0 |
+| pedsum | Pedigree summary: structure, relatedness, inbreeding, Ne | ~1.2GB | latest | amd64, arm64 | main (latest) | 1.1.0 |
 
 ## Versioning Strategy
 
@@ -264,9 +264,9 @@ singularity pull docker://biopsyk/solar:1.0.0
 singularity exec solar_1.0.0.sif solar
 singularity exec solar_1.0.0.sif solar < analysis_script.tcl
 
-singularity pull docker://biopsyk/pedsum:1.0.0
-singularity exec pedsum_1.0.0.sif pedsum --help
-singularity exec pedsum_1.0.0.sif pedsum summarize --in pedigree.tsv --out summary_out
+singularity pull docker://biopsyk/pedsum:1.1.0
+singularity exec pedsum_1.1.0.sif pedsum --help
+singularity exec pedsum_1.1.0.sif pedsum summarize --in pedigree.tsv --out summary_out
 
 # To bind your data directory (replace /path/to/data with your actual data path):
 singularity exec -B /path/to/data:/data plink_1.0.0.sif plink2 --help

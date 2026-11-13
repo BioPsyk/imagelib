@@ -10,7 +10,7 @@ Relationship-pair detection uses [`pedigree-graph`](https://github.com/rwaples/p
 
 ## Version Information
 
-- Internal image version: 1.0.0
+- Internal image version: 1.1.0
 - pedsum version: latest `main` at image build time (exact commit is written to `/opt/pedsum/IMAGE_REVISION` and `/etc/pedsum-version`)
 - Python 3.14 (required; 3.15 is not supported yet)
 
@@ -63,9 +63,9 @@ docker run --rm biopsyk/pedsum pedsum validate \
 ### Using with Singularity
 
 ```bash
-singularity pull docker://biopsyk/pedsum:1.0.0
-singularity exec pedsum_1.0.0.sif pedsum --help
-singularity exec -B /path/to/data:/data pedsum_1.0.0.sif \
+singularity pull docker://biopsyk/pedsum:1.1.0
+singularity exec pedsum_1.1.0.sif pedsum --help
+singularity exec -B /path/to/data:/data pedsum_1.1.0.sif \
   pedsum summarize --in /data/pedigree.tsv --out /data/summary_out
 ```
 
