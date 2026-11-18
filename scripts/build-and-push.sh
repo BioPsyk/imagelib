@@ -4,7 +4,8 @@ set -e
 
 # Configuration
 REGISTRY="biopsyk"  # Docker Hub organization
-PLATFORMS="linux/amd64,linux/arm64"
+# An image builds for these unless its folder has a PLATFORMS file naming its own.
+DEFAULT_PLATFORMS="linux/amd64,linux/arm64"
 
 # Function to build and push a single image
 build_and_push_image() {
@@ -21,8 +22,13 @@ build_and_push_image() {
     if [ -f "${image_path}/VERSION" ]; then
         version=$(cat "${image_path}/VERSION" | tr -d '[:space:]')
     fi
+
+    local platforms="${DEFAULT_PLATFORMS}"
+    if [ -f "${image_path}/PLATFORMS" ]; then
+        platforms=$(tr -d '[:space:]' < "${image_path}/PLATFORMS")
+    fi
     
-    echo "Building and pushing ${image_name}:${version}..."
+    echo "Building and pushing ${image_name}:${version} for ${platforms}..."
     
     # Set up BuildX builder if it doesn't exist
     if ! docker buildx inspect multiarch-builder >/dev/null 2>&1; then
@@ -32,7 +38,7 @@ build_and_push_image() {
     
     # Build and push the multi-architecture image with both version and latest tags
     docker buildx build \
-        --platform ${PLATFORMS} \
+        --platform ${platforms} \
         --tag ${REGISTRY}/${image_name}:${version} \
         --tag ${REGISTRY}/${image_name}:latest \
         --push \
