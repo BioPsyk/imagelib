@@ -22,7 +22,7 @@ This repository contains Dockerfiles for commonly used software at our institute
 | beagle | Genotype phasing and imputation | ~200MB | latest | amd64 | 5.5 (27Feb25) | 1.0.0 |
 | solar | Genetic variance components and pedigree analysis | ~150MB | latest | amd64 | 9.0.0 | 1.0.0 |
 | pedsum | Pedigree summary: structure, relatedness, inbreeding, Ne | ~1.2GB | latest | amd64, arm64 | main (latest) | 1.1.0 |
-| nordic-geno-epimight | EPIMIGHT h² and rg analyses across the Nordic registers | ~4.5GB | latest | amd64 | 0.1.1 | 1.0.0 |
+| nordic-geno-epimight | EPIMIGHT h² and rg analyses across the Nordic registers | ~4.5GB | latest | amd64 | 0.2.0 | 1.1.0 |
 | ltfgrs | Phenotype-based family genetic risk scores (LT-FH++, PA-FGRS, Kendler) | ~500MB | latest | amd64, arm64 | main (latest) | 1.0.0 |
 
 ## Versioning Strategy
@@ -288,9 +288,9 @@ singularity pull docker://biopsyk/pedsum:1.1.0
 singularity exec pedsum_1.1.0.sif pedsum --help
 singularity exec pedsum_1.1.0.sif pedsum summarize --in pedigree.tsv --out summary_out
 
-singularity pull docker://biopsyk/nordic-geno-epimight:1.0.0
-singularity exec nordic-geno-epimight_1.0.0.sif nordicepimight help
-singularity exec nordic-geno-epimight_1.0.0.sif nordicepimight selftest selftest-out/
+singularity pull docker://biopsyk/nordic-geno-epimight:1.1.0
+singularity exec nordic-geno-epimight_1.1.0.sif nordicepimight help
+singularity exec nordic-geno-epimight_1.1.0.sif nordicepimight selftest selftest-out/
 
 singularity pull docker://biopsyk/ltfgrs:1.0.0
 singularity exec ltfgrs_1.0.0.sif ltfgrs-version
