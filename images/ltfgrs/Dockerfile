@@ -42,6 +42,11 @@ RUN git clone --depth 1 --branch "${LTFGRS_REF}" https://github.com/EmilMiP/LTFG
     && Rscript -e 'install.packages("kinship2", repos = "https://cloud.r-project.org")' \
     && rm -rf /tmp/LTFGRS /tmp/Rtmp*
 
+# Keep upstream vignettes as plain .Rmd (no pandoc/rmarkdown/HTML).
+RUN git clone --depth 1 --branch "${LTFGRS_REF}" https://github.com/EmilMiP/LTFGRS.git /tmp/LTFGRS \
+    && cp -a /tmp/LTFGRS/vignettes /opt/ltfgrs/vignettes \
+    && rm -rf /tmp/LTFGRS
+
 COPY VERSION /etc/ltfgrs-version-tag
 RUN { \
       echo "LTFGRS ${LTFGRS_REF} ($(tr -d '[:space:]' < /opt/ltfgrs/IMAGE_REVISION))"; \

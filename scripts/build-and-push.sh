@@ -37,12 +37,16 @@ build_and_push_image() {
     fi
     docker buildx use multiarch-builder
     
-    # Build and push the multi-architecture image with both version and latest tags
+    # Docker-schema manifests, no provenance/SBOM attestations. HPC Singularity
+    # (and other older OCI clients) fail on Buildx OCI indexes with
+    # unknown/unknown attestation manifests ("failed to get checksum").
     docker buildx build \
         --platform "${platforms}" \
         --tag ${REGISTRY}/${image_name}:${version} \
         --tag ${REGISTRY}/${image_name}:latest \
-        --push \
+        --provenance=false \
+        --sbom=false \
+        --output type=image,push=true,oci-mediatypes=false \
         ${image_path}
         
     echo "Successfully built and pushed ${image_name}:${version}"
